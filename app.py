@@ -160,34 +160,40 @@ def start_tobs(start):
 
     session = Session(engine)
 
-    tmax = (
+    results = (
     session
-    .query(func.max(Measurement.tobs))
-    .filter(Measurement.date >= start)
-    .first()
-    )
-
-    tmin = (
-    session
-    .query(func.min(Measurement.tobs))
-    .filter(Measurement.date >= start)
-    .first()
-    )
-
-    tavg = (
-    session
-    .query(func.avg(Measurement.tobs))
+    .query(func.min(Measurement.tobs), func.max(Measurement.tobs), func.avg(Measurement.tobs))
     .filter(Measurement.date >= start)
     .first()
     )
 
     session.close()
+    
+    results_list = list(np.ravel(results))
+    results_list[2] = round(results_list[2],2)
+    return jsonify(results_list)
 
-    max_temp = list(np.ravel(tmin, tmax, tavg))
-    #min_temp = list(np.ravel(tmin))
-    #avg_temp = list(np.ravel(tavg))
 
-    return jsonify(max_temp)
+@app.route("/api/v1.0/<start>/<end>")
+def start_end_tobs(start, end):
+    print(f"Server received request for tobs between {start} and {end} date")
+
+    session = Session(engine)
+
+    results = (
+    session
+    .query(func.min(Measurement.tobs), func.max(Measurement.tobs), func.avg(Measurement.tobs))
+    .filter(Measurement.date >= start, Measurement.date <= end)
+    .first()
+    )
+
+    session.close()
+    
+    results_list = list(np.ravel(results))
+    results_list[2] = round(results_list[2],2)
+    return jsonify(results_list)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
