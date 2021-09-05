@@ -39,8 +39,13 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     print("Server received request for 'Home' page...")
-    return "Routes available: <p><a href=/api/v1.0/precipitation>/api/v1.0/precipitation</a></p> <p><a href=/api/v1.0/stations>/api/v1.0/stations</a></p> <p><a href=/api/v1.0/tobs>/api/v1.0/tobs</a></p>"
-
+    return (
+        f"Routes available: <p><a href=/api/v1.0/precipitation>/api/v1.0/precipitation</a></p>"
+        f"<p><a href=/api/v1.0/stations>/api/v1.0/stations</a></p>"
+        f"<p><a href=/api/v1.0/tobs>/api/v1.0/tobs</a></p>"
+        f"<p>/api/v1.0/start - Query min, max, and average temperature observations from START date. Where start should be a DATE in YYYY-MM-DD format</p>"
+        f"<p>/api/v1.0/start/end - Query min, max, and average temperature observations between START and END date. Where start and end should be a DATE in YYYY-MM-DD format</p>"
+        )
 
 # Routes
 @app.route("/api/v1.0/precipitation")
